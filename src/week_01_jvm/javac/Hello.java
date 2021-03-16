@@ -1,4 +1,4 @@
-package week_01.javac;
+package week_01_jvm.javac;
 
 /**
  * 涉及基本类型,四则运算,if和for 分析字节码
