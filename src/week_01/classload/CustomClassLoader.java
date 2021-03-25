@@ -1,4 +1,4 @@
-package week_01_jvm.classload;
+package week_01.classload;
 
 
 import java.io.File;
