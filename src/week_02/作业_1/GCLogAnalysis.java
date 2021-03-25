@@ -1,4 +1,4 @@
-package week_01_jvm.jmm;
+package week_02.作业_1;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
