@@ -1,0 +1,21 @@
+Serial GC
+由于是串行单线程执行,堆内存越大,清理时间越大,成正比.不适合做server.
+
+Parallel GC
+新生代的gc随着堆内存增大耗时减少
+出现了Ergonomics 类型的full gc,是负责自动的调解gc暂停时间和吞吐量之间的平衡的一种gc类型,在serial中没有.
+gc次数对比Serial GC明显增多.耗时对比Serial GC明显减少.
+GC的min和max区间特别大.
+
+CMS GC
+对比Parallel GC,在128mb-1G堆内存区间下,可能由于需要与用户线程抢占资源的原因(由于项目是不停的循环创建对象),所以
+无论是新生代还是老年代的GC耗时都高于Parallel GC,显然在这个场景下,使用CMS GC没有parallel好.
+
+
+G1 GC
+内存在128mb-256mb的情况下,出现内存溢出,region至少1mb的要求下,堆过小的应用不适合使用G1收集器.
+在堆内存越来越大的情况下,使用G1 GC,对比parallel GC在GC耗时上稳定很多.
+G1 Humongous Allocation:由于region默认1mb的情况下,不断出现G1 Humongous Allocation 类型的FULL GC.可以在生产环境下调的更大,减少这种错误.
+Evacuation Failure:没有空闲对象用于晋升老年代和幸存者区产生的full gc.可以增加堆的大小,减少XX：InitiatingHeapOccupancyPercent的值,提前触发
+gc.
+

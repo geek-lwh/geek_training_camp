@@ -1,4 +1,4 @@
-package week_02.作业_1;
+package week_02.housework1;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
