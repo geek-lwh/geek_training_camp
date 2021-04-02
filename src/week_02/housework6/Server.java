@@ -12,10 +12,13 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()+1);
-        final ServerSocket serverSocket = new ServerSocket(8081);
+        final ServerSocket serverSocket = new ServerSocket(8081,5);
+
         while (true){
             try{
                 final Socket socket = serverSocket.accept();
+                System.out.println("接收到一个请求 step 1");
+//                processing(socket);
                 executorService.execute(()-> processing(socket));
             }catch (Exception e){
                 e.printStackTrace();
@@ -26,6 +29,7 @@ public class Server {
     public static void processing(Socket socket) {
         PrintWriter printWriter = null;
         try {
+            Thread.sleep(5000);
             printWriter = new PrintWriter(socket.getOutputStream(),true);
             printWriter.println("HTTP/1.1 200 OK");
             printWriter.println("Content-Type:text/html;charset=utf-8");
@@ -34,7 +38,7 @@ public class Server {
             printWriter.println();
             printWriter.write(body);
             printWriter.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
