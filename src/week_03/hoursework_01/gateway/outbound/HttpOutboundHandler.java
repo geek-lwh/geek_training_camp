@@ -16,10 +16,12 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import week_03.hoursework_03.filter.HeaderHttpResponseFilter;
-import week_03.hoursework_03.filter.HttpRequestFilter;
-import week_03.hoursework_03.filter.HttpResponseFilter;
+import week_03.hoursework_03.HeaderHttpResponseFilter;
+import week_03.hoursework_03.HttpRequestFilter;
+import week_03.hoursework_03.HttpResponseFilter;
+import week_03.hoursework_04.RandomEndpointRouter;
 
+import java.util.List;
 import java.util.concurrent.*;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.NO_CONTENT;
@@ -30,11 +32,11 @@ public class HttpOutboundHandler {
 
     private CloseableHttpAsyncClient httpclient;
     private ExecutorService proxyService;
-    private String proxyServer;
-    HttpResponseFilter filter = new HeaderHttpResponseFilter();
+    private List<String> proxyServer;
+    private HttpResponseFilter filter = new HeaderHttpResponseFilter();
+    private RandomEndpointRouter randomEndpointRouter;
 
-
-    public HttpOutboundHandler(String proxyServer) {
+    public HttpOutboundHandler(List<String> proxyServer) {
         this.proxyServer = proxyServer;
 //        this.backendUrls = backends.stream().map(this::formatUrl).collect(Collectors.toList());
 
@@ -67,8 +69,9 @@ public class HttpOutboundHandler {
 
 
     public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, HttpRequestFilter filter) {
-//        String backendUrl = router.route(this.backendUrls);
-        final String url = proxyServer + fullRequest.uri();
+        // 通过服务列表随机一个地址
+        String url = randomEndpointRouter.select(this.proxyServer);
+//        final String url = proxyServer + fullRequest.uri();
         filter.filter(fullRequest, ctx);
         proxyService.submit(() -> fetchGet(fullRequest, ctx, url));
     }

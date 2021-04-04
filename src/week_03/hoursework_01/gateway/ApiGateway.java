@@ -2,17 +2,29 @@ package week_03.hoursework_01.gateway;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.*;
-import io.netty.channel.epoll.EpollChannelOption;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import week_03.hoursework_01.gateway.inbound.HttpInboundInitializer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ApiGateway {
 
-    public void run(){
+    public List<String> proxyServer;
+
+    public ApiGateway() {
+        this.proxyServer = new ArrayList<>();
+        proxyServer.add("http://localhost:8081");
+        proxyServer.add("http://localhost:8082");
+    }
+
+    public void run() {
         EventLoopGroup mainRecator = new NioEventLoopGroup(1);
         EventLoopGroup subRecator = new NioEventLoopGroup(4);
 
@@ -20,7 +32,7 @@ public class ApiGateway {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         // option针对mainRecator,childOption针对subRecator
         serverBootstrap
-                .option(ChannelOption.SO_BACKLOG,128)
+                .option(ChannelOption.SO_BACKLOG, 128)
                 // 是否开启Nagle算法
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true)
@@ -40,7 +52,7 @@ public class ApiGateway {
                     // handler在初始化时就会执行
                     .handler(new LoggingHandler(LogLevel.DEBUG))
                     // 而childHandler会在客户端成功connect后才执行,所以childHandler需要自定义实现
-                    .childHandler(new HttpInboundInitializer("http://localhost:8081"));
+                    .childHandler(new HttpInboundInitializer(proxyServer));
 
             Channel ch = serverBootstrap.bind(8080).sync().channel();
             System.out.println("开启netty http服务器，监听地址和端口为 http://127.0.0.1:8080");
