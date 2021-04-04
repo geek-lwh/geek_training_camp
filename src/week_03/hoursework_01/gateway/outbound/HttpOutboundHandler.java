@@ -16,6 +16,9 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import week_03.hoursework_03.filter.HeaderHttpResponseFilter;
+import week_03.hoursework_03.filter.HttpRequestFilter;
+import week_03.hoursework_03.filter.HttpResponseFilter;
 
 import java.util.concurrent.*;
 
@@ -24,10 +27,12 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 public class HttpOutboundHandler {
-    
+
     private CloseableHttpAsyncClient httpclient;
     private ExecutorService proxyService;
     private String proxyServer;
+    HttpResponseFilter filter = new HeaderHttpResponseFilter();
+
 
     public HttpOutboundHandler(String proxyServer) {
         this.proxyServer = proxyServer;
@@ -40,33 +45,34 @@ public class HttpOutboundHandler {
         proxyService = new ThreadPoolExecutor(cores, cores,
                 keepAliveTime, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(queueSize),
                 new NamedThreadFactory("proxyService"), handler);
-        
+
+        asyncConstructor(cores);
+        httpclient.start();
+    }
+
+    private void asyncConstructor(int cores) {
         IOReactorConfig ioConfig = IOReactorConfig.custom()
                 .setConnectTimeout(1000)
                 .setSoTimeout(1000)
                 .setIoThreadCount(cores)
                 .setRcvBufSize(32 * 1024)
                 .build();
-        
+
         httpclient = HttpAsyncClients.custom().setMaxConnTotal(40)
                 .setMaxConnPerRoute(8)
                 .setDefaultIOReactorConfig(ioConfig)
-                .setKeepAliveStrategy((response,context) -> 6000)
+                .setKeepAliveStrategy((response, context) -> 6000)
                 .build();
-        httpclient.start();
     }
 
-    private String formatUrl(String backend) {
-        return backend.endsWith("/")?backend.substring(0,backend.length()-1):backend;
-    }
-    
-    public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx) {
+
+    public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, HttpRequestFilter filter) {
 //        String backendUrl = router.route(this.backendUrls);
         final String url = proxyServer + fullRequest.uri();
-//        filter.filter(fullRequest, ctx);
-        proxyService.submit(()->fetchGet(fullRequest, ctx, url));
+        filter.filter(fullRequest, ctx);
+        proxyService.submit(() -> fetchGet(fullRequest, ctx, url));
     }
-    
+
     private void fetchGet(final FullHttpRequest inbound, final ChannelHandlerContext ctx, final String url) {
         final HttpGet httpGet = new HttpGet(url);
         //httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
@@ -115,8 +121,7 @@ public class HttpOutboundHandler {
 
             response.headers().set("Content-Type", "application/json");
             response.headers().setInt("Content-Length", Integer.parseInt(endpointResponse.getFirstHeader("Content-Length").getValue()));
-
-//            filter.filter(response);
+            filter.filter(response);
 
 //            for (Header e : endpointResponse.getAllHeaders()) {
 //                //response.headers().set(e.getName(),e.getValue());
