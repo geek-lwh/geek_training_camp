@@ -5,20 +5,24 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.util.ReferenceCountUtil;
 import week_03.hoursework_01.gateway.outbound.HttpOutboundHandler;
+import week_03.hoursework_03.filter.HeaderHttpRequestFilter;
+import week_03.hoursework_03.filter.HttpRequestFilter;
 
 
 public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 
-//    private static Logger logger = LoggerFactory.getLogger(HttpInboundHandler.class);
+    //    private static Logger logger = LoggerFactory.getLogger(HttpInboundHandler.class);
     private final String proxyServer;
 
     private HttpOutboundHandler handler;
-//    private HttpRequestFilter filter = new HeaderHttpRequestFilter();
+
+    private HttpRequestFilter filter = new HeaderHttpRequestFilter();
+
     public HttpInboundHandler(String proxyServer) {
         this.proxyServer = proxyServer;
         this.handler = new HttpOutboundHandler(this.proxyServer);
     }
-    
+
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
@@ -34,9 +38,10 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 //            if (uri.contains("/test")) {
 //                handlerTest(fullRequest, ctx);
 //            }
-    
-            handler.handle(fullRequest, ctx);
-    
+
+
+            handler.handle(fullRequest, ctx, filter);
+
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
