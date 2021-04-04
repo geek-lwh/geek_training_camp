@@ -7,5 +7,6 @@ public class HeaderHttpResponseFilter implements HttpResponseFilter {
     @Override
     public void filter(FullHttpResponse response) {
         response.headers().set("abc", "aaa");
+        response.headers().set("abcd", "bbb");
     }
 }
