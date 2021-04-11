@@ -1,5 +1,7 @@
 package week_04.hoursework_01.sync;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class Runner1 implements Runnable {
 
     @Override
@@ -7,7 +9,9 @@ public class Runner1 implements Runnable {
         for (int i = 0; i < 100; i++) {
             System.out.println("进入Runner1运行状态——————————" + i);
         }
-
+        ConcurrentLinkedQueue concurrentLinkedQueue = new ConcurrentLinkedQueue();
+        concurrentLinkedQueue.poll();
+        concurrentLinkedQueue.size();
         boolean result = Thread.currentThread().isInterrupted();
 
         boolean result1 = Thread.interrupted(); // 重置状态
