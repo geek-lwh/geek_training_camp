@@ -1,5 +1,5 @@
 
-package main.java.week_04.hoursework_01.sync;
+package week_04.hoursework_01.sync;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ public class RunnerMain {
         Runner1 runner1 = new Runner1();
         Thread thread1 = new Thread(runner1);
 
-        java0.conc0301.Runner2 runner2 = new java0.conc0301.Runner2();
+        Runner2 runner2 = new Runner2();
         Thread thread2 = new Thread(runner2);
 
         thread1.start();

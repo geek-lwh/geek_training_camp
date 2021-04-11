@@ -1,4 +1,4 @@
-package main.java.week_04.hoursework_01.sync;
+package week_04.hoursework_01.sync;
 
 public class ThreadCount {
     public static void main(String[] args) throws InterruptedException {

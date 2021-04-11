@@ -1,4 +1,4 @@
-package main.java.week_04.hoursework_01.sync;
+package week_04.hoursework_01.sync;
 
 public class ThreadA extends Thread {
 
