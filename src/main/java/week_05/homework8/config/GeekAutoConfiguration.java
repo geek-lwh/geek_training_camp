@@ -14,12 +14,12 @@ import week_05.homework8.preperties.StudentProperties;
 
 @Configuration
 @EnableConfigurationProperties({KlassProperties.class,SchoolProperties.class,StudentProperties.class})
-@ConditionalOnProperty()
+//@EnableConfigurationProperties({KlassProperties.class})
 public class GeekAutoConfiguration {
 
     @Autowired
     private KlassProperties klassProperties;
-
+//
     @Autowired
     private SchoolProperties schoolProperties;
 

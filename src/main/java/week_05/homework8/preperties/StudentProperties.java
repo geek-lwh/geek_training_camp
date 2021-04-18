@@ -4,9 +4,13 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
-@ConfigurationProperties()
+@ConfigurationProperties(prefix = StudentProperties.STUDENT_PREFIX)
 public class StudentProperties {
 
     public String studentName;
+
+    private String enable = "true";
+
+    public static final String STUDENT_PREFIX = "student";
 
 }
