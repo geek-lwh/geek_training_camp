@@ -1,7 +1,5 @@
-package week_05.hoursework_01;
+package week_05.homework1.jdkproxy;
 
-import net.sf.cglib.beans.BeanMap;
-import net.sf.cglib.beans.ImmutableBean;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;

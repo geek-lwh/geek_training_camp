@@ -1,4 +1,4 @@
-package week_05.hoursework_01;
+package week_05.homework1.jdkproxy;
 
 import sun.misc.ProxyGenerator;
 

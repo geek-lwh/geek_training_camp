@@ -1,18 +1,18 @@
-package week_05.hoursework_01;
+package week_05.homework1.jdkproxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
-public class Women implements People{
+public class Man implements People{
     @Override
     public void eat(String food) {
-        System.out.println("women eating !");
+        System.out.println("man eating !");
     }
 
     public static void main(String[] args) {
-        People man = new Women();
+        People man = new Man();
         InvocationHandler handler = new PeopleJdkProxy(man);
-        People people = (People) Proxy.newProxyInstance(Women.class.getClassLoader(),new Class[]{People.class},handler);
+        People people = (People) Proxy.newProxyInstance(Man.class.getClassLoader(),new Class[]{People.class},handler);
         people.eat("food");
 
     }
