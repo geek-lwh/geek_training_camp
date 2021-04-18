@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=week_05.homework8.config.GeekAutoConfiguration
