@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    
+    
+    <context:component-scan base-package="week_05" />
+
+    <!--    定义拦截切面执行的方法 让spring容器管理-->
+    <bean id="logAspect" class="week_05.homework1.aspect.LogAspect" />
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <aop:config>
+        <!--        `定义代理的对象,是实现类  -->
+        <aop:pointcut expression="execution(* week_05.*.aop.*.*(..))" id="p1" /> <!--切点-->
+        <aop:aspect ref="logAspect"> <!--切面 -->
+            <aop:around method="around" pointcut-ref="p1" />
+            <aop:before method="before" pointcut-ref="p1" /> <!--前置通知-->
+            <aop:after-returning method="after" pointcut-ref="p1"/> <!--后置通知-->
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="applicationLog" class="week_05.homework1.log.impl.ApplicationLog"/>
+<!--    <bean id="applicationLog2" class="week_05.homework1.log.impl.ApplicationLog2"/>-->
+
+
+<!--    homework2-->
+    <bean id="student" class="week_05.homework2.xml.Student">
+        <property name="name" value="xml注入name" />
+        <property name="age" value="1" />
+    </bean>
+
+    <!--    homework3-->
+    <bean id="dog" class="week_05.homework3.Dog">
+        <property name="name" value="mike" />
+        <property name="age" value="1" />
+    </bean>
+
+    <bean id="dog1" class="week_05.homework3.Dog">
+        <property name="name" value="peter" />
+        <property name="age" value="2" />
+    </bean>
+
+    <bean id="cat" class="week_05.homework3.Cat">
+        <property name="name" value="linda" />
+        <property name="age" value="21" />
+    </bean>
+
+    <bean id="zoo" class="week_05.homework3.Zoo">
+        <property name="dogs" >
+            <list>
+                <ref bean ="dog"/>
+                <ref bean ="dog1"/>
+            </list>
+        </property>
+        <property name="cat" ref="cat" />
+    </bean>
+</beans>
