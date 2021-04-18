@@ -91,7 +91,31 @@ public class JDBCUtils {
         return sta.executeUpdate(sql);
     }
 
-    public static void main(String[] args) throws SQLException {
+    /**
+     * 查询
+     * @param sta
+     * @param sql
+     * @param rs
+     * @throws SQLException
+     */
+    private static void qry(PreparedStatement sta,ResultSet rs) throws SQLException {
+        rs = sta.executeQuery();
+        while(rs.next()) {
+            System.out.println(rs.getObject("deptno"));
+        }
+    }
+    /**
+     * 增删改
+     * @param sta
+     * @param sql
+     * @return
+     * @throws SQLException
+     */
+    private static int update(PreparedStatement sta,String sql) throws SQLException {
+        return sta.executeUpdate();
+    }
+
+    public void useStatement() throws SQLException {
         //通过工具类获取数据库连接对象
         Connection con = JDBCUtils.getConnection();
         //通过连接创建数据库执行对象
@@ -112,4 +136,58 @@ public class JDBCUtils {
         System.out.println("删除执行结果:"+update(sta,sqlStatement));
         JDBCUtils.closeResource(con, sta, rs);
     }
+
+    public void usePreparedStatement() throws SQLException {
+        //通过工具类获取数据库连接对象
+        Connection con = JDBCUtils.getConnection();
+        //通过连接创建数据库执行对象
+        PreparedStatement ps = null;
+        //为查询的结果集准备接收对象
+        ResultSet rs = null;
+        //查询
+        String sqlStatement = "SELECT * FROM USER WHERE ID = ?";
+        ps = con.prepareStatement(sqlStatement);
+        ps.setObject(1, "10");
+        qry(ps,rs);
+        //增加
+        sqlStatement = "INSERT INTO USER VALUES(?,?)";
+        ps = con.prepareStatement(sqlStatement);
+        ps.setObject(1, "50");
+        ps.setObject(2, "LWH");
+        System.out.println("插入执行结果:"+update(ps,sqlStatement));
+        //更新
+        sqlStatement = "UPDATE USER SET NAME=? WHERE ID = ?";
+        ps = con.prepareStatement(sqlStatement);
+        ps.setObject(1, "DDD");
+        ps.setObject(2, "50");
+        System.out.println("更新执行结果:"+update(ps,sqlStatement));
+        //删除
+        sqlStatement = "DELETE FROM USE WHERE ID = ?";
+        ps = con.prepareStatement(sqlStatement);
+        ps.setObject(1, "50");
+        System.out.println("删除执行结果:"+update(ps,sqlStatement));
+        JDBCUtils.closeResource(con, ps, rs);
+    }
+
+//    public static void main(String[] args) throws SQLException {
+//        //通过工具类获取数据库连接对象
+//        Connection con = JDBCUtils.getConnection();
+//        //通过连接创建数据库执行对象
+//        Statement sta = con.createStatement();
+//        //为查询的结果集准备接收对象
+//        ResultSet rs = null;
+//        //查询
+//        String sqlStatement = "SELECT * FROM USER";
+//        qry(sta,sqlStatement,rs);
+//        //增加
+//        sqlStatement = "INSERT INTO USER VALUES('50')";
+//        System.out.println("插入执行结果:"+update(sta,sqlStatement));
+//        //更新
+//        sqlStatement = "UPDATE USER SET NAME='LWH' WHERE ID = '50'";
+//        System.out.println("更新执行结果:"+update(sta,sqlStatement));
+//        //删除
+//        sqlStatement = "DELETE FROM USER WHERE ID = '50'";
+//        System.out.println("删除执行结果:"+update(sta,sqlStatement));
+//        JDBCUtils.closeResource(con, sta, rs);
+//    }
 }
