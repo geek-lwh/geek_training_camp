@@ -88,3 +88,9 @@ create table order_details(
     create_time datetime  not null,
     last_modify_time datetime  not null
 );
+
+--资金流向表
+
+-- 退货
+
+--
