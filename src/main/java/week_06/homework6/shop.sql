@@ -66,15 +66,26 @@ create table stock(
 
 
 -- 订单表
-create table `order`
-(
-    id          varchar(32) null,
-    original_price  double not null comment '原价',
-    price  double not null comment '最终价格',
-    status       tinyint     null comment '订单状态',
-    user_id     varchar(32) null,
-    create_time datetime  not null,
-    last_modify_time datetime  not null
+create table order_info(
+	`order_id` bigint(20) unsigned not null AUTO_INCREMENT,
+	`order_number` varchar(32),
+	`buyer_id` bigint(20) unsigned,
+	`trade_status` tinyint(2) unsigned,
+	`pay_status`  tinyint(2) unsigned,
+	`best_time` datetime comment '收货人最佳收货时间',
+	`order_amount` decimal(12,2) comment '订单金额',
+	`pay_amount` decimal(12,2) comment '订单支付金额',
+	`total_amount` decimal(12,2) comment '商品最终金额',
+	`pay_time` datetime comment '订单支付时间',
+	`card_owner` varchar(64) comment '卡所有者',
+	`card_code` varchar(32),
+	`card_name` varchar(32),
+	`card_numer` varchar(48),
+	`outer_trade_no` varchar(48) comment '外部订单号',
+	`create_time` datetime,
+	`remark` varchar(255),
+	`delivery_type` tinyint(4) comment '平台送,卖家送',
+	primary key(order_id)
 );
 
 -- 订单详情
