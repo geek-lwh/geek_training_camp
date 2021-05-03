@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * cost 91.42秒
+ * cost 1728.083秒
  */
 public class InsertRow2 {
 

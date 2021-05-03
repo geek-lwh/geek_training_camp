@@ -1,6 +1,6 @@
 package week_07.homework2;
 
-public class DataSourceConfiguration {
+public class SqlUtils {
 
 
     public static String getSql(int i) {
@@ -15,6 +15,7 @@ public class DataSourceConfiguration {
                 "'2021-05-02 20:51:09'" + "," +
                 1 + ")";
     }
+
 
 //    public static String now(){
 //        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

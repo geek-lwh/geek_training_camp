@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.StopWatch;
 
-import static week_07.homework2.DataSourceConfiguration.getSql;
+import static week_07.homework2.SqlUtils.getSql;
 
 /**
  * cost 174.706秒
