@@ -36,14 +36,14 @@ public class LoadDataInsert {
      * @return
      */
     public static String getFileSql(int i) {
-        // `order_number`, `buyer_id`, `trade_status`, `pay_status`
-        return i + "," + i + "," + 1 + "," + 2 + "," +
+        // `order_id`,`order_number`, `buyer_id`, `trade_status`, `pay_status`
+        return "NULL" + "," + i + "," + i + "," + 1 + "," + 2 + "," +
                 // `best_time`, `order_amount`, `pay_amount`, `total_amount`, `pay_time`
-                "'2021-05-02 20:51:09'" + "," + i + "," + i + "," + i + "," + "'2021-05-02 20:51:09'" + "," +
+                "2021-05-02 20:51:09" + "," + i + "," + i + "," + i + "," + "2021-05-02 20:51:09" + "," +
                 // `card_owner`, `card_code`, `card_name`, `card_numer`, `outer_trade_no`
                 "NULL, NULL, NULL, NULL, NULL" + "," +
                 // `create_time`, `remark`, `delivery_type`
-                "'2021-05-02 20:51:09'" + "," + "NULL" + "," + 1 + ";";
+                "2021-05-02 20:51:09" + "," + "NULL" + "," + 1 + ";";
     }
 
     public static void writeFile() throws IOException {
