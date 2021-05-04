@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Aspect
 @Component
-public class GlobalAdvice {
+public class SwitchDatasourceAdvice {
 
     @Resource
     private JdbcTemplate jdbcTemplate;
