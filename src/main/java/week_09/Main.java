@@ -7,6 +7,7 @@ import com.lmax.disruptor.dsl.ProducerType;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * @Author: luweihong
@@ -19,7 +20,7 @@ public class Main {
         long beginTime = System.currentTimeMillis();
 
         // 定义用于事件处理的线程池，Disruptor 通过 java.util.concurrent.ExecutorService 提供的线程来触发 Consumer 的事件处理
-        ExecutorService executor = Executors.newCachedThreadPool();
+        ThreadFactory threadFactory = r -> new Thread(r, "disruptor");
 
         // 指定事件工厂
         OrderEventFactory factory = new OrderEventFactory();
@@ -28,10 +29,10 @@ public class Main {
         int bufferSize = 1024 * 1024;
 
         // 单线程模式，获取额外的性能
-        Disruptor<OrderEvent> disruptor = new Disruptor<>(factory, bufferSize, executor,
+        Disruptor<OrderEvent> disruptor = new Disruptor<>(factory, bufferSize, threadFactory,
                 ProducerType.SINGLE, new YieldingWaitStrategy());
         // 设置事件业务处理器---消费者
-        disruptor.handleEventsWith(new OrderEventHandler());
+        disruptor.handleEventsWith(new OrderEventConsumer());
         // 启动disruptor线程
         disruptor.start();
 
@@ -47,7 +48,6 @@ public class Main {
         }
 
         disruptor.shutdown(); //关闭 disruptor，方法会堵塞，直至所有的事件都得到处理；
-        executor. shutdown(); //关闭 disruptor 使用的线程池；如果需要的话，必须手动关闭， disruptor 在 shutdown 时不会自动关闭；
 
         long cost = System.currentTimeMillis() - beginTime;
         System.out.println("总共耗时 " + cost + "毫秒");

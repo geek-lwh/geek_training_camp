@@ -7,7 +7,7 @@ import com.lmax.disruptor.EventHandler;
  * @Desc: 天花板
  * @Date: 2023/3/21
  */
-public class OrderEventHandler implements EventHandler<OrderEvent> {
+public class OrderEventConsumer implements EventHandler<OrderEvent> {
 
     @Override
     public void onEvent(OrderEvent orderEvent, long sequence, boolean endOfBatch) throws Exception {
